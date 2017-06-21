@@ -1,6 +1,5 @@
 #include "ofApp.h"
 
-bool use_kal = true;
 //--------------------------------------------------------------
 void ofApp::setup(){
     
@@ -391,7 +390,6 @@ void ofApp::mousePressed(int x, int y, int button){
 
 //--------------------------------------------------------------
 void ofApp::mouseReleased(int x, int y, int button){
-    use_kal = !use_kal;
 }
 
 //--------------------------------------------------------------
@@ -445,70 +443,6 @@ void ofApp::audioIn(float * input, int bufferSize, int nChannels) {
     }
 }
 //--------------------------------------------------------------
-
-
-void ofApp::setupKiloscope(){
-    
-    //    Kiloscope
-    std::cout<<glGetString(GL_VERSION)<<std::endl;
-
-
-    ofDisableArbTex();
-    img.load("eyes.jpg");
-    
-    float planeScale = 1;
-    int planeWidth = ofGetWidth() * planeScale;
-    int planeHeight = ofGetHeight() * planeScale;
-    int planeGridSize = 20;
-    int planeColumns = planeWidth / planeGridSize;
-    int planeRows = planeHeight / planeGridSize;
-    
-    plane.set(planeWidth, planeHeight, planeColumns, planeRows, OF_PRIMITIVE_TRIANGLES);
-    plane.mapTexCoordsFromTexture(img.getTexture());
-    
-    shader_kelido.load("gl/keleidoscope");
-    shader.load("gl/shader");
-    
-    use_kal = true;
-    
-}
-
-void ofApp::drawKiloscope(){
-    //    Kiloscope
-    ofClear(255.0f, 255.f, 255.f);
-    ofSetColor(255);
-    
-    GLint reapeat = GL_MIRRORED_REPEAT;
-    //    ofTexture.ofSetTextureWrap(reapeat,reapeat);
-    texture.setTextureWrap(reapeat, reapeat);
-    float mousePositionX = ofMap(mouseX, 0, ofGetWidth(), plane.getWidth(), -plane.getWidth(), true);
-    float mousePositionY = ofMap(mouseX, 0, ofGetHeight(), plane.getHeight(), -plane.getHeight(), true);
-    
-    float mouseNormX = ((float)mouseX)/((float)ofGetWidth());
-    float mouseNormY = ((float)mouseY)/((float)ofGetHeight());
-    
-    if (use_kal){
-        shader_kelido.begin();
-        shader_kelido.setUniform2f("mouse", mousePositionX, mousePositionY);
-        shader_kelido.setUniform1f("time", ofGetElapsedTimef());
-        shader_kelido.setUniform2f("resolution", ofGetWidth(), ofGetHeight());
-        shader_kelido.setUniform2f("uvOffset", mouseNormX, mouseNormY);
-        ofPushMatrix();
-        img.draw(0, 0, ofGetWidth(), ofGetHeight());
-        ofPopMatrix();
-        shader_kelido.end();
-    } else {
-        shader.begin();
-        shader.setUniform2f("mouse", mouseNormX, mouseNormY);
-        ofPopMatrix();
-        ofTranslate(ofGetWidth()/2, ofGetHeight()/2);
-        plane.draw();
-        ofPopMatrix();
-        shader.end();
-    }
-
-    
-}
 
 //void ofApp::audioOut(ofSoundBuffer &outBuffer){
 //    for (int i = 0; i < outBuffer.size(); i *= 2) {

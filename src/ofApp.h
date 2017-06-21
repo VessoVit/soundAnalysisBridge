@@ -33,9 +33,7 @@ class ofApp : public ofBaseApp{
     
         ofSoundPlayer soundPlayer;
         ofSoundBuffer soundBuffer;
-        //    Kiloscope [TO-DO]
-        void setupKiloscope();
-        void drawKiloscope();
+
         //    Audio
         //        void audioOut(ofSoundBuffer &outBuffer);
         //        void audioOut(float * output, int bufferSize, int nChannels);
